@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSpring, animated } from 'react-spring';
 import { useMediaQuery } from 'react-responsive';
 import { MapContainer, TileLayer, Polyline, Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Importing Leaflet's CSS
 import './App.css'; // Importing CSS
 
@@ -60,7 +59,7 @@ function App() {
   const [error, setError] = useState(null);
   const [routes, setRoutes] = useState([]);
   const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
-
+  const [legDistances, setLegDistances] = useState([]);
 
   const isDesktopOrLaptop = useMediaQuery({
     query: '(min-device-width: 1224px)'
@@ -78,57 +77,77 @@ function App() {
       const endLocation = await fetchLocation(endAddress);
       const directionsData = await fetchDirections(startLocation, endLocation);
 
+      // Calculate total distance and distances for each leg
+      const totalDistance = directionsData.route.legs.reduce((acc, leg) => acc + leg.distance, 0);
+      const legDistances = directionsData.route.legs.map(leg => leg.distance);
+
       setDirections(directionsData);
       setError(null);
 
-      setRoutes(prevRoutes => [...prevRoutes, { startAddress, endAddress, directions: directionsData }]);
+      setRoutes(prevRoutes => [...prevRoutes, {
+        startAddress,
+        endAddress,
+        directions: directionsData,
+        totalDistance,
+        legDistances
+      }]);
     } catch (error) {
       console.error(error);
       setError('An error occurred while fetching directions.');
     }
   };
 
-  const handleRouteChange = (index, startAddress, endAddress) => {
-    // Fetch new directions and update the corresponding route
-  };
-
   const handleRouteRemove = (index) => {
     setRoutes(prevRoutes => prevRoutes.filter((route, i) => i !== index));
   };
 
+  function metersToMiles(meters) {
+    return meters * 0.000621371;
+  }
+
   return (
     <div className={`App ${isDesktopOrLaptop ? 'desktop' : 'mobile'}`}>
-      <input
-        type="text"
-        placeholder="Enter start address"
-        onChange={e => setStartAddress(e.target.value)}
-        className="input-field"
-      />
-      <input
-        type="text"
-        placeholder="Enter end address"
-        onChange={e => setEndAddress(e.target.value)}
-        className="input-field"
-      />
-      <button onClick={handleClick} className="directions-button">Get Directions</button>
-      {error && <p>{error}</p>}
-      <div className="route-bubbles">
-        {routes.map((route, index) => (
-          <div key={index} className="route-bubble" style={{ backgroundColor: colors[index % colors.length] }}>
-            <p>Start: {route.startAddress}</p>
-            <p>End: {route.endAddress}</p>
-            <button onClick={() => handleRouteChange(index)}>Change Address</button>
-            <button onClick={() => handleRouteRemove(index)}>Remove Route</button>
-          </div>
-        ))}
-      </div>
-      <div className="map-container">
-        <MapContainer style={{ height: "100%", width: "100%" }} center={directions ? [directions.route.bounds.north, directions.route.bounds.east] : [0, 0]} zoom={13}>
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <div className='address-bar'>
+        <div className='address-title'>
+          Shortest Drive<p />
+        </div>
+        <input
+          type="text"
+          placeholder="Enter start address"
+          onChange={e => setStartAddress(e.target.value)}
+          className="input-field"
+        />
+        <input
+          type="text"
+          placeholder="Enter end address"
+          onChange={e => setEndAddress(e.target.value)}
+          className="input-field"
+        />
+        <button onClick={handleClick} className="directions-button">Get Directions</button>
+        <p></p>
+        <div className="route-bubbles">
           {routes.map((route, index) => (
-            <Route key={index} route={route} color={colors[index % colors.length]} />
+            <div key={index} className="route-bubble" style={{ backgroundColor: colors[index % colors.length] }}>
+              <div className="route-bubble-line">Start: <span className="uppercase-text"> {route.startAddress}</span></div>
+              <div className="route-bubble-line">End: <span className="uppercase-text"> {route.endAddress}</span></div>
+              {route.legDistances.map((distance, legIndex) => (
+                <div className="route-bubble-line" key={legIndex}>Distance: {metersToMiles(distance).toFixed(2)} Miles</div>
+              ))}
+              <button className="route-bubble-button" onClick={() => handleRouteRemove(index)}>Remove Route</button>
+            </div>
           ))}
-        </MapContainer>
+        </div>
+      </div>
+      <div className='main-content'>
+        {error && <p>{error}</p>}
+        <div className="map-container">
+          <MapContainer style={{ height: "100%", width: "100%" }} center={directions ? [directions.route.bounds.north, directions.route.bounds.east] : [0, 0]} zoom={13}>
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            {routes.map((route, index) => (
+              <Route key={index} route={route} color={colors[index % colors.length]} />
+            ))}
+          </MapContainer>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 {
   "name": "ship-locator",
+  "homepage": "/3/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

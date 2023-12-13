@@ -1,15 +1,11 @@
 .App {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.App.desktop {
-  /* Styles for desktop */
+  flex-direction: row;
+  height: 100%;
 }
 
 .App.mobile {
-  /* Styles for mobile */
+  flex-direction: column;
 }
 
 .input-field {
@@ -43,20 +39,22 @@
 .map-container {
   width: calc(100vw - 20px);
   height: calc(100vh - 20px);
-  position: relative; 
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .route-bubbles {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: left;
   padding: 10px;
 }
 
 .route-bubble {
   display: flex;
-  align-items: center;
+  align-items: left;
+  flex-direction: column;
+  border: 3px solid darkgray;
+  width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 25px;
@@ -66,7 +64,8 @@
 }
 
 .route-bubble:hover {
-   background-color: #e5e5e5; 
+   background-color: #e5e5e5;
+   border: 3px solid rgb(122, 122, 122);
 }
 
 .route-color-indicator {
@@ -74,4 +73,85 @@
    height:10px; 
    margin-right:10px; 
    border-radius:50%; 
+}
+
+.distance-display {
+  font-size: 1.2em;
+  margin: 10px;
+  padding: 5px;
+  background-color: lightgray;
+  border-radius: 5px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .distance-display {
+    font-size: 1em;
+  }
+}
+
+.address-bar {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  align-content: center;
+  padding: 33px;
+  max-width: 639px;
+  background-color: white;
+}
+
+.address-bar .input-field {
+  min-width: 242px;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.address-title {
+  font-size: 21px;
+  font-weight: 900;
+  text-align: center;
+  align-content: center;
+}
+
+.route-bubble-line {
+  padding: 3px;
+  margin-bottom: 1px;
+}
+
+.uppercase-text {
+  text-transform: uppercase;
+}
+
+.route-bubble-button {
+  margin: 3px;
+  border-radius: 25px;
+  border: none;
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.route-bubble-animation-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.route-bubble-animation-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.route-bubble-animation-exit {
+  opacity: 1;
+}
+
+.route-bubble-animation-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms, transform 300ms;
 }
