@@ -79,7 +79,7 @@ function App() {
   const [isAddressBarMinimized, setIsAddressBarMinimized] = useState(false);
 
   const isDesktopOrLaptop = useMediaQuery({
-    query: '(min-device-width: 1224px)'
+    query: '(min-device-width: 768px)'
   });
 
   const animationProps = useSpring({
@@ -139,7 +139,7 @@ function App() {
             className="minimize-button"
             onClick={() => setIsAddressBarMinimized(!isAddressBarMinimized)}
           >
-            {isAddressBarMinimized ? '▶' : '◀'}
+            <div className='minimize-button-arrows'>{isAddressBarMinimized ? '▶' : '◀'}</div>
           </button>
         </div>
         {!isAddressBarMinimized && (

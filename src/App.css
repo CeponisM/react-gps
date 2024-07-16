@@ -54,7 +54,7 @@
   align-items: left;
   flex-direction: column;
   border: 2px solid #ccc;
-  width: 100%;
+  width: auto;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
@@ -130,7 +130,8 @@
   margin-bottom: 10px;
 }
 
-.input-field, .directions-button {
+.input-field,
+.directions-button {
   margin-bottom: 10px;
 }
 
@@ -152,23 +153,27 @@
   position: absolute;
   right: 6px;
   top: 12%;
-  transform: translateY(-50%);
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 50%;
   width: 24px;
   height: 24px;
-  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  box-sizing: border-box
 }
 
 .minimize-button:hover {
   background-color: #0056b3;
+}
+
+.minimize-button-arrows {
+  line-height: 1;
 }
 
 .route-bubble-line {
