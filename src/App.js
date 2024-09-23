@@ -22,7 +22,7 @@ async function fetchLocation(address) {
     url: 'https://trueway-geocoding.p.rapidapi.com/Geocode',
     params: { address },
     headers: {
-      'X-RapidAPI-Key': '0026bcf8a1mshb924ad6fbaa031fp15ce2cjsn87ce6d3e6066',
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
       'X-RapidAPI-Host': 'trueway-geocoding.p.rapidapi.com'
     }
   };
@@ -39,7 +39,7 @@ async function fetchDirections(startLocation, endLocation) {
       stops: `${startLocation.lat},${startLocation.lng};${endLocation.lat},${endLocation.lng}`
     },
     headers: {
-      'X-RapidAPI-Key': '0026bcf8a1mshb924ad6fbaa031fp15ce2cjsn87ce6d3e6066',
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
       'X-RapidAPI-Host': 'trueway-directions2.p.rapidapi.com'
     }
   };
@@ -204,4 +204,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
