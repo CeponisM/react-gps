@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# React GPS Route Finder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web application that helps users find the shortest driving routes between two addresses. The app displays multiple routes on an interactive map with distance calculations and color-coded route visualization.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 🗺️ Interactive map powered by Leaflet
+- 📍 Address-to-coordinates geocoding
+- 🛣️ Multi-route planning and visualization
+- 📏 Distance calculations in miles
+- 🎨 Color-coded routes for easy identification
+- 📱 Responsive design for desktop and mobile
+- ⚡ Real-time route calculation
+- 🗂️ Route management (add/remove routes)
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React** - Frontend framework
+- **Leaflet & React-Leaflet** - Interactive maps
+- **Axios** - HTTP requests
+- **React Spring** - Animations
+- **TrueWay APIs** - Geocoding and directions
+- **CSS3** - Styling and responsive design
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/CeponisM/react-gps.git
+   cd react-gps
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### `npm run build`
+3. Create a `.env` file in the root directory and add your RapidAPI key:
+   ```env
+   REACT_APP_RAPIDAPI_KEY=your_rapidapi_key_here
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Start the development server:
+   ```bash
+   npm start
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## API Setup
 
-### `npm run eject`
+This project uses TrueWay APIs from RapidAPI:
+1. Sign up at [RapidAPI](https://rapidapi.com/)
+2. Subscribe to TrueWay Geocoding API
+3. Subscribe to TrueWay Directions API
+4. Copy your API key to the `.env` file
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Enter a starting address in the first input field
+2. Enter a destination address in the second input field
+3. Click "Get Directions" to calculate and display the route
+4. View the route on the map with distance information
+5. Add multiple routes to compare different trips
+6. Remove routes using the "Remove Route" button in each route panel
+7. Minimize the control panel for better map visibility
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Author
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**CeponisM** - [GitHub](https://github.com/CeponisM)
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Find the shortest route to your destination with React GPS Route Finder!*
