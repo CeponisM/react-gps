@@ -18,6 +18,25 @@ function MarkerIcon({ position, color, label }) {
   return <Marker position={position} icon={icon} />;
 }
 
+// API call to convert coordinates to address (reverse geocoding)
+async function fetchAddressFromCoords(lat, lng) {
+  const options = {
+    method: 'GET',
+    url: 'https://trueway-geocoding.p.rapidapi.com/ReverseGeocode',
+    params: { 
+      location: `${lat},${lng}`,
+      language: 'en'
+    },
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_RAPIDAPI_KEY,
+      'X-RapidAPI-Host': 'trueway-geocoding.p.rapidapi.com'
+    }
+  };
+
+  const response = await axios.request(options);
+  return response.data.results[0];
+}
+
 // API call to convert address to coordinates
 async function fetchLocation(address) {
   const options = {
@@ -89,6 +108,7 @@ function App() {
   const [error, setError] = useState(null);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLocationLoading, setIsLocationLoading] = useState(false);
   const [isAddressBarMinimized, setIsAddressBarMinimized] = useState(false);
   
   // Route colors for visual distinction
@@ -106,7 +126,77 @@ function App() {
     delay: 300
   });
 
-  // Main workflow: Handle route calculation
+  // Get user's current location and convert to address
+  const getCurrentLocation = useCallback(async () => {
+    // Check if geolocation is supported
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    setIsLocationLoading(true);
+    setError(null);
+
+    // Use Promise wrapper for geolocation API
+    const getCurrentPosition = () => {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          resolve,
+          reject,
+          { 
+            enableHighAccuracy: true, 
+            timeout: 10000, 
+            maximumAge: 300000 // 5 minutes cache
+          }
+        );
+      });
+    };
+
+    try {
+      // Get current coordinates
+      const position = await getCurrentPosition();
+      const { latitude, longitude } = position.coords;
+
+      // Convert coordinates to address
+      const addressData = await fetchAddressFromCoords(latitude, longitude);
+      
+      if (addressData && addressData.address) {
+        setStartAddress(addressData.address);
+      } else {
+        throw new Error('Unable to determine address from location');
+      }
+
+    } catch (error) {
+      console.error('Location error:', error);
+      
+      // Handle different types of location errors
+      switch (error.code) {
+        case 1: // PERMISSION_DENIED
+          setError('Location access denied. Please enable location services and try again.');
+          break;
+        case 2: // POSITION_UNAVAILABLE
+          setError('Location information unavailable. Please try again.');
+          break;
+        case 3: // TIMEOUT
+          setError('Location request timed out. Please try again.');
+          break;
+        default:
+          setError('Failed to get current location. Please enter address manually.');
+      }
+    } finally {
+      setIsLocationLoading(false);
+    }
+  }, []);
+
+  // Handle Enter key press for form submission
+  const handleKeyPress = useCallback((event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleClick();
+    }
+  }, []);
+
+  // Handle Enter key press for form submission
   const handleClick = useCallback(async () => {
     // Validation
     if (!startAddress.trim() || !endAddress.trim()) {
@@ -194,28 +284,42 @@ function App() {
         {!isAddressBarMinimized && (
           <>
             {/* Address Input Section */}
-            <input
-              type="text"
-              placeholder="Enter start address"
-              value={startAddress}
-              onChange={handleStartAddressChange}
-              className="input-field"
-              aria-label="Start address"
-            />
-            <input
-              type="text"
-              placeholder="Enter end address"
-              value={endAddress}
-              onChange={handleEndAddressChange}
-              className="input-field"
-              aria-label="End address"
-            />
+            <div className="input-container">
+              <div className="input-with-button">
+                <input
+                  type="text"
+                  placeholder="Enter start address"
+                  value={startAddress}
+                  onChange={handleStartAddressChange}
+                  className="input-field"
+                  aria-label="Start address"
+                />
+                <button
+                  onClick={getCurrentLocation}
+                  disabled={isLocationLoading}
+                  className="location-button"
+                  title="Use current location"
+                  aria-label="Get current location"
+                >
+                  {isLocationLoading ? '⏳' : '📍'}
+                </button>
+              </div>
+              <input
+                type="text"
+                placeholder="Enter end address"
+                value={endAddress}
+                onChange={handleEndAddressChange}
+                onKeyPress={handleKeyPress}
+                className="input-field"
+                aria-label="End address"
+              />
+            </div>
             <button 
               onClick={handleClick} 
               className="directions-button" 
-              disabled={isLoading || !startAddress.trim() || !endAddress.trim()}
+              disabled={isLoading || isLocationLoading || !startAddress.trim() || !endAddress.trim()}
             >
-              {isLoading ? 'Loading...' : 'Get Directions'}
+              {isLoading ? 'Calculating Route...' : 'Get Directions'}
             </button>
             
             {/* Route Management Section */}
