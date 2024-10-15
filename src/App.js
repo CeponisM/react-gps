@@ -376,7 +376,7 @@ function App() {
           <MapContainer 
             style={{ height: "100%", width: "100%" }} 
             center={[39.8283, -98.5795]} 
-            zoom={4}
+            zoom={5}
           >
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {/* Render all calculated routes */}
