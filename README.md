@@ -65,10 +65,6 @@ This project uses TrueWay APIs from RapidAPI:
 6. Remove routes using the "Remove Route" button in each route panel
 7. Minimize the control panel for better map visibility
 
-## Author
-
-**CeponisM** - [GitHub](https://github.com/CeponisM)
-
 ---
 
 *Find the shortest route to your destination with React GPS Route Finder!*
